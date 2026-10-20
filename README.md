@@ -12,3 +12,6 @@ Used conventionalcommits.org and Angular convention to name my commits.
 
 ## Known Limitations
 - If the data contains no crossover, the backtest incorrectly holds from the second day.
+
+## Disclaimer
+- This is just an educational simulation, not financial advice.
