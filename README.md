@@ -5,3 +5,6 @@ Used conventionalcommits.org and Angular convention to name my commits.
 
 Strategy: Buy when the 20MA crosses above 50MA. Sell when the 20MA crosses below 50MA.
 - Wait for the first crossover. Don't buy on the first day.
+
+Assumptions:
+- Trades execute at the next day's open after a crossover.
