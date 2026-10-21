@@ -24,6 +24,7 @@ trade_returns = [0] * len(exit_trades)
 for i in range(len(exit_trades)):
     trade_returns[i]= df.loc[exit_trades[i], 'Open'] / df.loc[entry_trades[i], 'Open'] - 1
 
+
 res = 1
 for i in range(len(trade_returns)):
     res *= 1 + trade_returns[i]
@@ -36,13 +37,25 @@ buy_and_hold -= 1
 
 print("benchmark: " + str(buy_and_hold * 100) + "%")
 
-print(str(entry_trades[0]) + " to " + str(exit_trades[-1]))
-print(str(df.index[-1]))
+#print(str(entry_trades[0]) + " to " + str(exit_trades[-1]))
+#print(str(df.index[-1]))
+df['equity_curve'] = np.where(
+    df['trade'] == 1,
+    df['Close'] / df['Open'],           
+    np.where(
+        df['position'] == 1,
+        df['Close'] / df['Close'].shift(1),
+        1.0
+    )
+)
+df['equity_curve'] = df['equity_curve'].cumprod(axis=0, skipna=True)
+
+print(df)
 
 #print(len(entry_trades))
 #print(len(exit_trades))
 #print(df['crossover'].value_counts())
-#first_crossover = df.index.get_loc(first_index)
-#print(df.iloc[first_crossover-3:first_crossover+3])
+first_crossover = df.index.get_loc(first_index)
+print(df.iloc[first_crossover-3:first_crossover+3])
 
 
