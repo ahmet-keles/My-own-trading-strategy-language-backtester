@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import math
 
 df = pd.read_csv('data/SPY_10y.csv', index_col='Date', parse_dates=['Date'])
 
@@ -39,23 +40,31 @@ print("benchmark: " + str(buy_and_hold * 100) + "%")
 
 #print(str(entry_trades[0]) + " to " + str(exit_trades[-1]))
 #print(str(df.index[-1]))
+
 df['equity_curve'] = np.where(
     df['trade'] == 1,
     df['Close'] / df['Open'],           
     np.where(
         df['position'] == 1,
         df['Close'] / df['Close'].shift(1),
-        1.0
+        np.where(
+            df['trade'] == -1,
+            df['Open'] / df['Close'].shift(1),
+            1
+        )
     )
 )
 df['equity_curve'] = df['equity_curve'].cumprod(axis=0, skipna=True)
 
-print(df)
+assert math.isclose((df.loc[exit_trades[-1], 'equity_curve'] - 1) * 100, res * 100), "The expected return and the equity curve don't match."
 
+print("equity_curve: " + str((df.loc[exit_trades[-1], 'equity_curve'] - 1) * 100) + "%")
+
+#print(df)
 #print(len(entry_trades))
 #print(len(exit_trades))
 #print(df['crossover'].value_counts())
-first_crossover = df.index.get_loc(first_index)
-print(df.iloc[first_crossover-3:first_crossover+3])
+#first_crossover = df.index.get_loc(first_index)
+#print(df.iloc[first_crossover-3:first_crossover+3])
 
 
