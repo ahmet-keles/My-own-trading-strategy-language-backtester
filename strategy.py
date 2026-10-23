@@ -2,10 +2,13 @@ import numpy as np
 import pandas as pd
 import math
 
+# Read data using pandas read_csv() function and set 'Date' as index and parse the dates
 df = pd.read_csv('data/SPY_10y.csv', index_col='Date', parse_dates=['Date'])
 
+# Create simple moving averages columns for 20 days and 50 days
 df['sma_20'] = df['Close'].rolling(window=20).mean()
 df['sma_50'] = df['Close'].rolling(window=50).mean()
+
 df = df.dropna(subset=['sma_20', 'sma_50'])
 
 df['signal'] = np.where(df['sma_20'] > df['sma_50'], 1, 0)
@@ -24,7 +27,6 @@ trade_returns = [0] * len(exit_trades)
 
 for i in range(len(exit_trades)):
     trade_returns[i]= df.loc[exit_trades[i], 'Open'] / df.loc[entry_trades[i], 'Open'] - 1
-
 
 res = 1
 for i in range(len(trade_returns)):
