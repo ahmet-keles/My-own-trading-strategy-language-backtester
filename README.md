@@ -4,10 +4,10 @@ I'm going to attempt to build a language to test out simple trading strategies. 
 Used conventionalcommits.org and Angular convention to name my commits.
 
 ## Status
-Step 1 of 7 complete. Next: designing the language.
+Step 2 of 7 complete. Next: C++ lexer.
 
 - [x] 1. Python prototype: load SPY data, compute moving averages, backtest a crossover strategy
-- [ ] 2. Language design: define what a strategy can express and write its grammar
+- [x] 2. Language design: define what a strategy can express and write its grammar, see [docs/language.md](docs/language.md)
 - [ ] 3. C++ lexer: turn strategy text into tokens
 - [ ] 4. C++ parser: build a syntax tree from the tokens
 - [ ] 5. C++ interpreter: run the syntax tree over price data to produce trades
@@ -15,8 +15,15 @@ Step 1 of 7 complete. Next: designing the language.
 - [ ] 7. Stats, storage and benchmarks: Sharpe, drawdown, SQLite, C++ vs. Python speed
 
 ## Strategies
+Step 1 prototype (hard-coded in Python):
 - Buy when the 20MA crosses above 50MA. Sell when the 20MA crosses below 50MA.
 - Wait for the first crossover. Don't buy on the first day.
+
+The same idea in my strategy language, plus a 5% stop-loss (see [docs/language.md](docs/language.md)):
+`````
+buy(sma(20) crosses_above sma(50))
+sell(close <= 0.95 * entry_price or sma(20) crosses_below sma(50))
+`````
 
 ## Assumptions
 - Trades execute at the next day's open after a crossover.
@@ -26,6 +33,7 @@ Step 1 of 7 complete. Next: designing the language.
 
 ## Known Limitations
 - If the data contains no crossover, the backtest incorrectly holds from the second day.
+- exit_price and sell-only strategies are deliberately out of version 1.
 
 ## Disclaimer
 - This is just an educational simulation, not financial advice.
